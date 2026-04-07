@@ -1,4 +1,5 @@
 import express from "express";
+import { check } from "express-validator";
 import {
   getJeux,
   getJeuId,
@@ -13,7 +14,16 @@ router.get("/", getJeux);
 
 router.get("/:tid", getJeuId);
 
-router.post("/", createJeu);
+router.post(
+  "/",
+  [
+    check("nom").isLength({ min: 3 }),
+    check("categorie").not().isEmpty(),
+    check("joueurs").isInt({ min: 1 }),
+    check("duree").isInt({ min: 1 }),
+  ],
+  createJeu,
+);
 
 router.patch("/:tid", modifierJeu);
 

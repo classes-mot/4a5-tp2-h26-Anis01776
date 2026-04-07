@@ -1,5 +1,6 @@
+import HttpError from "../util/http-error.js";
 import { v4 as uuidv4 } from "uuid";
-
+import { validationResult } from "express-validator";
 let defaultGames = [
   {
     id: "1",
@@ -41,14 +42,20 @@ const getJeuId = (req, res, next) => {
     return j.id === jeuId;
   });
   if (!jeu) {
-    const erreur = new Error("Jeu non trouvée");
-    erreur.code = 404;
-    return next(erreur);
+    return next(new HttpError("Jeu non trouvee", 404));
   }
   res.json({ jeu });
 };
 
 const createJeu = (req, res, next) => {
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    console.log(validationErrors);
+    return next(
+      new HttpError("données saisies invalides valider votre payload", 422),
+    );
+  }
+
   const { nom, categorie, joueurs, duree } = req.body;
   const createdJeu = {
     id: uuidv4(),
@@ -64,8 +71,8 @@ const createJeu = (req, res, next) => {
 const modifierJeu = (req, res, next) => {
   const { nom, categorie, joueurs, duree } = req.body;
   const jeuId = req.params.tid;
-  const updatedJeu = { ...defaultGames.find((t) => t.id === jeuId) };
-  const jeuIndex = defaultGames.findIndex((t) => t.id === jeuId);
+  const updatedJeu = { ...defaultGames.find((j) => j.id === jeuId) };
+  const jeuIndex = defaultGames.findIndex((j) => j.id === jeuId);
   if (nom) updatedJeu.nom = nom;
   if (categorie) updatedJeu.categorie = categorie;
   if (joueurs) updatedJeu.joueurs = joueurs;
