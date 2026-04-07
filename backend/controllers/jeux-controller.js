@@ -35,8 +35,9 @@ let defaultGames = [
 ];
 
 const getJeux = async (req, res, next) => {
+  let jeux;
   try {
-    const jeux = await Jeu.find();
+    jeux = await Jeu.find();
   } catch (e) {
     const err = new HttpError("Une erreur dans la Bd est survenue", 500);
     return next(err);
@@ -88,17 +89,23 @@ const createJeu = async (req, res, next) => {
   res.status(201).json({ jeu: createdJeu });
 };
 
-const modifierJeu = (req, res, next) => {
-  const { nom, categorie, joueurs, duree } = req.body;
+const modifierJeu = async (req, res, next) => {
   const jeuId = req.params.tid;
-  const updatedJeu = { ...defaultGames.find((j) => j.id === jeuId) };
-  const jeuIndex = defaultGames.findIndex((j) => j.id === jeuId);
-  if (nom) updatedJeu.nom = nom;
-  if (categorie) updatedJeu.categorie = categorie;
-  if (joueurs) updatedJeu.joueurs = joueurs;
-  if (duree) updatedJeu.duree = duree;
-  defaultGames[jeuIndex] = updatedJeu;
-  res.status(200).json({ jeu: updatedJeu });
+  const jeuUpdates = req.body;
+
+  try {
+    const updatedJeu = await Jeu.findByIdAndUpdate(jeuId, jeuUpdates, {
+      new: true,
+    });
+    if (!updatedJeu) {
+      return res.status(404).json({ message: "Jeu non trouvee" });
+    }
+    res.status(200).json({ jeu: updatedJeu.toObject({ getters: true }) });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la modificatoin de la tache" });
+  }
 };
 
 const supprierJeu = (req, res, next) => {
