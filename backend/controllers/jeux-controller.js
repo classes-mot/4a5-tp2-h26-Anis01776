@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-const defaultGames = [
+let defaultGames = [
   {
     id: "1",
     nom: "Catan",
@@ -74,4 +74,10 @@ const modifierJeu = (req, res, next) => {
   res.status(200).json({ jeu: updatedJeu });
 };
 
-export { getJeux, getJeuId, createJeu, modifierJeu };
+const supprierJeu = (req, res, next) => {
+  const jeuId = req.params.tid;
+  defaultGames = defaultGames.filter((j) => j.id !== jeuId);
+  res.status(200).json({ message: "Jeu supprimer" });
+};
+
+export { getJeux, getJeuId, createJeu, modifierJeu, supprierJeu };
