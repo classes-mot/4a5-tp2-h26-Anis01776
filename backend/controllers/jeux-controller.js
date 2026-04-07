@@ -34,8 +34,14 @@ let defaultGames = [
   },
 ];
 
-const getJeux = (req, res, next) => {
-  res.json({ jeux: defaultGames });
+const getJeux = async (req, res, next) => {
+  try {
+    const jeux = await Jeu.find();
+    res.json({ jeux: jeux });
+  } catch (e) {
+    const err = new HttpError("Une erreur dans la Bd est survenue", 500);
+    return next(err);
+  }
 };
 
 const getJeuId = async (req, res, next) => {
