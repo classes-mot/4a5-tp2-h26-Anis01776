@@ -1,6 +1,8 @@
 import HttpError from "../util/Http-error.js";
 import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
+import { Jeu } from "../models/jeux.js";
+
 let defaultGames = [
   {
     id: "1",
@@ -47,7 +49,7 @@ const getJeuId = (req, res, next) => {
   res.json({ jeu });
 };
 
-const createJeu = (req, res, next) => {
+const createJeu = async (req, res, next) => {
   const validationErrors = validationResult(req);
   if (!validationErrors.isEmpty()) {
     console.log(validationErrors);
@@ -57,14 +59,21 @@ const createJeu = (req, res, next) => {
   }
 
   const { nom, categorie, joueurs, duree } = req.body;
-  const createdJeu = {
-    id: uuidv4(),
+
+  const createdJeu = new Jeu({
     nom,
     categorie,
     joueurs: String(joueurs),
     duree: String(duree),
-  };
-  defaultGames.push(createdJeu);
+  });
+
+  try {
+    await createdJeu.save();
+  } catch (err) {
+    const erreur = new HttpError("Creation dans la bd echoue :(", 500);
+    return next(erreur);
+  }
+
   res.status(201).json({ jeu: createdJeu });
 };
 
