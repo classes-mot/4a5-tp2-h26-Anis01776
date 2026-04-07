@@ -1,4 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
+import jwt from "jsonwebtoken";
+import HttpError from "../util/Http-error.js";
 
 let defaultUsers = [
   {
@@ -22,9 +24,23 @@ const registerUser = (req, res, next) => {
     email,
     password,
   };
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: createdUser.id, email: createdUser.email },
+      "cleTresTresTresSecret???",
+      { expiresIn: "1h" },
+    );
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later.",
+      500,
+    );
+    return next(error);
+  }
   setTimeout(() => {
     defaultUsers.push(createdUser);
-    res.status(201).json({ user: createdUser });
+    res.status(201).json({ user: createdUser, token: token });
   }, 1000);
 };
 
@@ -38,7 +54,26 @@ const login = (req, res, next) => {
       .status(401)
       .json({ message: "Identification echouee , verifier les identifiants" });
   } else {
-    res.json({ message: "Identification reussie" });
+    let token;
+    try {
+      token = jwt.sign(
+        { userId: identifiedUser.id, email: identifiedUser.email },
+        "cleTresTresTresSecret???",
+        { expiresIn: "1h" },
+      );
+    } catch (err) {
+      const error = new HttpError(
+        "Signing up failed, please try again later.",
+        500,
+      );
+      return next(error);
+    }
+    res.json({
+      message: "Identification reussie",
+      userId: identifiedUser.id,
+      email: identifiedUser.email,
+      token: token,
+    });
   }
 };
 
