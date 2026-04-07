@@ -61,8 +61,8 @@ const createJeu = (req, res, next) => {
     id: uuidv4(),
     nom,
     categorie,
-    joueurs,
-    duree,
+    joueurs: String(joueurs),
+    duree: String(duree),
   };
   defaultGames.push(createdJeu);
   res.status(201).json({ jeu: createdJeu });
