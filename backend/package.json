@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/classes-mot/4a5-tp2-h26-Anis01776#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

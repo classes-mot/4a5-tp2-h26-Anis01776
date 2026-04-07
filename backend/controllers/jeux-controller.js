@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 const defaultGames = [
   {
     id: "1",
@@ -45,4 +47,18 @@ const getJeuId = (req, res, next) => {
   }
   res.json({ jeu });
 };
-export { getJeux ,getJeuId };
+
+const createJeu = (req, res, next) => {
+  const { nom, categorie, joueurs, duree } = req.body;
+  const createdJeu = {
+    id: uuidv4(),
+    nom,
+    categorie,
+    joueurs,
+    duree,
+  };
+  defaultGames.push(createdJeu);
+  res.status(201).json({ jeu: createdJeu });
+};
+
+export { getJeux, getJeuId, createJeu };
