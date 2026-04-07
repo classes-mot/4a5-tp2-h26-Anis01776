@@ -1,0 +1,27 @@
+{
+  "name": "tp2",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Description du projet, comment l'exécuter, etc...",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/classes-mot/4a5-tp2-h26-Anis01776.git"
+  },
+  "author": "anis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/classes-mot/4a5-tp2-h26-Anis01776/issues"
+  },
+  "homepage": "https://github.com/classes-mot/4a5-tp2-h26-Anis01776#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
