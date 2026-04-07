@@ -61,4 +61,25 @@ const createJeu = (req, res, next) => {
   res.status(201).json({ jeu: createdJeu });
 };
 
-export { getJeux, getJeuId, createJeu };
+const modifierJeu = (req, res, next) => {
+  const { id, nom, categorie, joueurs, duree } = req.body;
+  const index = defaultGames.findIndex((j) => {
+    return j.id === id;
+  });
+  if (index === -1) {
+    const erreur = new Error("Jeu non trouvée");
+    erreur.code = 404;
+    return next(erreur);
+  } else {
+    defaultGames[index] = {
+      id: id,
+      nom: nom,
+      categorie: categorie,
+      joueurs: joueurs,
+      duree: duree,
+    };
+  }
+  res.status(200).json({ jeu: defaultGames[index] });
+};
+
+export { getJeux, getJeuId, createJeu, modifierJeu };
