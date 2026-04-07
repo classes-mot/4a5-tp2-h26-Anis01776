@@ -2,6 +2,9 @@ import express from "express";
 import jeuxRoute from "./routes/jeux-routes.js";
 import userRoute from "./routes/users-routes.js";
 import { errorHandler } from "./handler/error-handler.js";
+import { connectDB } from "./util/bd.js";
+
+await connectDB();
 
 const app = express();
 
