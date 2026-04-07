@@ -1,5 +1,6 @@
 import express from "express";
 import { check } from "express-validator";
+import { checkAuth } from "../middleware/check-auth.js";
 import {
   getJeux,
   getJeuId,
@@ -16,6 +17,7 @@ router.get("/:tid", getJeuId);
 
 router.post(
   "/",
+  checkAuth,
   [
     check("nom").isLength({ min: 3 }),
     check("categorie").not().isEmpty(),
@@ -25,8 +27,8 @@ router.post(
   createJeu,
 );
 
-router.patch("/:tid", modifierJeu);
+router.patch("/:tid", checkAuth, modifierJeu);
 
-router.delete("/:tid", supprierJeu);
+router.delete("/:tid", checkAuth, supprierJeu);
 
 export default router;
