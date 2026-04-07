@@ -38,15 +38,20 @@ const getJeux = (req, res, next) => {
   res.json({ jeux: defaultGames });
 };
 
-const getJeuId = (req, res, next) => {
+const getJeuId = async (req, res, next) => {
   const jeuId = req.params.tid;
-  const jeu = defaultGames.find((j) => {
-    return j.id === jeuId;
-  });
+  let jeu;
+  try {
+    jeu = await Jeu.findById(jeuId);
+  } catch (e) {
+    console.log(e);
+    const err = new HttpError("Une erreur dans la Bd est survenue", 500);
+    return next(err);
+  }
   if (!jeu) {
     return next(new HttpError("Jeu non trouvee", 404));
   }
-  res.json({ jeu });
+  res.json({ jeu: jeu.toObject({ getters: true }) });
 };
 
 const createJeu = async (req, res, next) => {
