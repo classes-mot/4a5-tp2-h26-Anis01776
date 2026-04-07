@@ -28,4 +28,18 @@ const registerUser = (req, res, next) => {
   }, 1000);
 };
 
-const 
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  const identifiedUser = defaultUsers.find(
+    (u) => (u.email === email) & (u.password === password),
+  );
+  if (!identifiedUser) {
+    res
+      .status(401)
+      .json({ message: "Identification echouee , verifier les identifiants" });
+  } else {
+    res.json({ message: "Identification reussie" });
+  }
+};
+
+export { registerUser, login };
