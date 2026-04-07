@@ -9,6 +9,6 @@ router.get("/:tid", getJeuId);
 
 router.post("/",createJeu)
 
-router.patch("/",modifierJeu)
+router.patch("/:tid",modifierJeu)
 
 export default router;
