@@ -11,23 +11,20 @@ import {
 
 const router = express.Router();
 
+const verification = [
+  check("nom").isLength({ min: 3 }),
+  check("categorie").not().isEmpty(),
+  check("joueurs").isInt({ min: 1 }),
+  check("duree").isInt({ min: 1 }),
+];
+
 router.get("/", getJeux);
 
 router.get("/:tid", getJeuId);
 
-router.post(
-  "/",
-  checkAuth,
-  [
-    check("nom").isLength({ min: 3 }),
-    check("categorie").not().isEmpty(),
-    check("joueurs").isInt({ min: 1 }),
-    check("duree").isInt({ min: 1 }),
-  ],
-  createJeu,
-);
+router.post("/", checkAuth, verification, createJeu);
 
-router.patch("/:tid", checkAuth, modifierJeu);
+router.patch("/:tid", checkAuth, verification, modifierJeu);
 
 router.delete("/:tid", checkAuth, supprierJeu);
 

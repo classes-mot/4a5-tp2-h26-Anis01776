@@ -33,7 +33,6 @@ const getJeuId = async (req, res, next) => {
 const createJeu = async (req, res, next) => {
   const validationErrors = validationResult(req);
   if (!validationErrors.isEmpty()) {
-    console.log(validationErrors);
     return next(
       new HttpError("données saisies invalides valider votre payload", 422),
     );
@@ -60,6 +59,12 @@ const createJeu = async (req, res, next) => {
 
 const modifierJeu = async (req, res, next) => {
   const jeuId = req.params.tid;
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return next(
+      new HttpError("données saisies invalides valider votre payload", 422),
+    );
+  }
   const jeuUpdates = req.body;
 
   try {
