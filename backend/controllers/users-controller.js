@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import HttpError from "../util/Http-error.js";
 import { User } from "../models/User.js";
