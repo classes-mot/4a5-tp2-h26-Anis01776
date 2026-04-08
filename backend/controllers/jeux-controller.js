@@ -3,37 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
 import { Jeu } from "../models/jeux.js";
 
-let defaultGames = [
-  {
-    id: "1",
-    nom: "Catan",
-    categorie: "Strategie",
-    joueurs: "3-4",
-    duree: "60",
-  },
-  {
-    id: "2",
-    nom: "Pandemic",
-    categorie: "Cooperatif",
-    joueurs: "2-4",
-    duree: "45",
-  },
-  {
-    id: "3",
-    nom: "7 Wonders",
-    categorie: "Famille",
-    joueurs: "2-7",
-    duree: "30",
-  },
-  {
-    id: "4",
-    nom: "Echec",
-    categorie: "Strategie",
-    joueurs: "2",
-    duree: "20",
-  },
-];
-
 const getJeux = async (req, res, next) => {
   let jeux;
   try {
@@ -108,10 +77,21 @@ const modifierJeu = async (req, res, next) => {
   }
 };
 
-const supprierJeu = (req, res, next) => {
+const supprierJeu = async (req, res, next) => {
   const jeuId = req.params.tid;
-  defaultGames = defaultGames.filter((j) => j.id !== jeuId);
-  res.status(200).json({ message: "Jeu supprimer" });
+
+  try {
+    const jeu = await Jeu.findByIdAndDelete(jeuId);
+    if (!jeu) {
+      return res.status(404).json({ message: "Jeu non trouve" });
+    }
+    res.status(200).json({ message: "Jeu supprimer" });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la suppresion de la tache dans la bd" });
+  }
 };
 
 export { getJeux, getJeuId, createJeu, modifierJeu, supprierJeu };
