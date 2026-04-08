@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import HttpError from "../util/Http-error.js";
+import { User } from "../models/User.js";
 
 let defaultUsers = [
   {
@@ -11,19 +12,31 @@ let defaultUsers = [
   },
 ];
 
-const registerUser = (req, res, next) => {
-  const { name, email, password } = req.body;
-  const hasUser = defaultUsers.find((u) => u.email === email);
-  if (hasUser) {
-    res.status(422).json({ message: "Mail deja utiliser" });
-    return;
+const registerUser = async (req, res, next) => {
+  const { email, password } = req.body;
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (erreur) {
+    return next(
+      new HttpError("Enregistrement echouer recommence plus tard", 500),
+    );
   }
-  const createdUser = {
-    id: uuidv4(),
-    name,
+
+  if (existingUser) {
+    return next(new HttpError("Le email est deja utiliser", 422));
+  }
+  const createdUser = new User({
     email,
     password,
-  };
+  });
+  try {
+    await createdUser.save();
+  } catch (erreur) {
+    return next(
+      new HttpError("Enregistrement echouer recommence plus tard", 500),
+    );
+  }
   let token;
   try {
     token = jwt.sign(
@@ -38,10 +51,9 @@ const registerUser = (req, res, next) => {
     );
     return next(error);
   }
-  setTimeout(() => {
-    defaultUsers.push(createdUser);
-    res.status(201).json({ user: createdUser, token: token });
-  }, 1000);
+  res
+    .status(201)
+    .json({ user: createdUser.toObject({ getters: true }), token: token });
 };
 
 const login = (req, res, next) => {
