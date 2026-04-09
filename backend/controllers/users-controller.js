@@ -50,7 +50,7 @@ const login = async (req, res, next) => {
     token = jwt.sign(
       { userId: existingUser.id, email: existingUser.email },
       "cleTresTresTresSecret???",
-      { expiresIn: "1h" },
+      { expiresIn: "48h" },
     );
   } catch (err) {
     const error = new HttpError("Erreur lors de la generation de la cle", 500);
