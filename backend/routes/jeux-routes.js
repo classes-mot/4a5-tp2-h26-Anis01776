@@ -13,8 +13,15 @@ const router = express.Router();
 
 const verification = [
   check("nom").isLength({ min: 3 }),
-  check("categorie").not().isEmpty(),
-  check("joueurs").isInt({ min: 1 }),
+  check("categorie").isIn([
+    "stratégie",
+    "coopératif",
+    "famille",
+    "ambiance",
+    "cartes",
+  ]),
+  check("joueurs.min").isInt({ min: 1 }),
+  check("joueurs.max").isInt({ min: 1 }),
   check("duree").isInt({ min: 1 }),
 ];
 

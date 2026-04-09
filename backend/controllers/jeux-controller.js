@@ -43,8 +43,11 @@ const createJeu = async (req, res, next) => {
   const createdJeu = new Jeu({
     nom,
     categorie,
-    joueurs: String(joueurs),
-    duree: String(duree),
+    joueurs: {
+      min: joueurs.min,
+      max: joueurs.max,
+    },
+    duree: duree,
   });
 
   try {
