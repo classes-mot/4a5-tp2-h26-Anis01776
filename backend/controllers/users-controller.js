@@ -1,8 +1,15 @@
 import jwt from "jsonwebtoken";
 import HttpError from "../util/Http-error.js";
 import { User } from "../models/User.js";
+import { validationResult } from "express-validator";
 
 const registerUser = async (req, res, next) => {
+  const validationErrors = validationResult(req);
+  if (!validationErrors.isEmpty()) {
+    return next(
+      new HttpError("données saisies invalides valider votre payload", 422),
+    );
+  }
   const { email, password } = req.body;
   let existingUser;
   try {
