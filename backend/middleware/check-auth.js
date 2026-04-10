@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import HttpError from "../util/Http-error.js";
+import HttpError from "../util/http-error.js";
 
 const checkAuth = (req, res, next) => {
   try {

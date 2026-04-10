@@ -1,4 +1,4 @@
-import HttpError from "../util/Http-error.js";
+import HttpError from "../util/http-error.js";
 import { v4 as uuidv4 } from "uuid";
 import { validationResult } from "express-validator";
 import { Jeu } from "../models/jeux.js";

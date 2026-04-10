@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import HttpError from "../util/Http-error.js";
-import { User } from "../models/User.js";
+import HttpError from "../util/http-error.js";
+import { User } from "../models/user.js";
 import { validationResult } from "express-validator";
 
 const registerUser = async (req, res, next) => {
